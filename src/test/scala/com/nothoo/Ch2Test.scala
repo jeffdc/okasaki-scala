@@ -24,46 +24,27 @@ class Ch2Suite extends FunSuite {
     assert(suffixes(List(1,2,3,4)) == List(List(1,2,3,4), List(2,3,4), List(3,4), List(4), Nil))
   }
 
-  /**
-   * When writing tests, one would often like to re-use certain values for multiple
-   * tests. For instance, we would like to create an Int-set and have multiple test
-   * about it.
-   *
-   * Instead of copy-pasting the code for creating the set into every test, we can
-   * store it in the test class using a val:
-   *
-   *   val s1 = singletonSet(1)
-   *
-   * However, what happens if the method "singletonSet" has a bug and crashes? Then
-   * the test methods are not even executed, because creating an instance of the
-   * test class fails!
-   *
-   * Therefore, we put the shared values into a separate trait (traits are like
-   * abstract classes), and create an instance inside each test method.
-   *
-   */
+  test("see how sweet the Unbalanced set is") {
+    val s = new UnbalancedSet[Int].insert(1).insert(9).insert(7).insert(3)
+    assert(s.member(1))
+    assert(s.member(9))
+    assert(s.member(7))
+    assert(s.member(3))
+    assert(!s.member(40))
+    assert(!s.member(2))
+  }
 
-  // trait TestSets {
-  //   val bound = 1000
-  //   def arbitrarySet(i: Int*): Set = x => i.contains(x)
-  //   def boundedSet(m: Int, n: Int): Set =  x => x >= m && x <= n
-  //   val s1 = singletonSet(1)
-  //   val s2 = singletonSet(2)
-  //   val s3 = singletonSet(3)
-  //   val s12 = arbitrarySet(1,2)
-  //   val s13 = arbitrarySet(1,3)
-  //   val s123 = arbitrarySet(1,2,3)
-  //   def emptySet: Set = x => false
-  //   val s1to10 = boundedSet(1,10)
-  //   val underBounds = singletonSet(-(bound+1))
-  //   val overBounds = singletonSet(bound+1)
-  //   def id = (x: Int) => true
-  // }
+  test("size does matter") {
+    assert(new UnbalancedSet[Int].insert(1).insert(2).size == 2)
+  }
 
-  // test("singletonSet(1) contains 1") {
-  //   new TestSets {
-  //     assert(contains(s1, 1), "Singleton")
-  //     assert(!contains(s1, 2), "Singleton")
-  //   }
-  // }
+  test("complete function is totally working") {
+    // size should 2^n - 1
+    assert(complete(1, 10).size == scala.math.pow(2, 10) - 1)
+  }
+
+  test("balanced is not like politics, it works") {
+    assert(balanced(1, 10).size == 10)
+    assert(balanced(1, 9).size == 9)
+  }
 }
